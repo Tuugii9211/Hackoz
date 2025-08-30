@@ -9,8 +9,11 @@ export default function LoginScreen() {
 
   const signIn = async () => {
     const { error } = await supabase.auth.signInWithPassword({ email, password });
-    if (error) Alert.alert('Login Error', error.message);
-    else Alert.alert('Logged in!');
+    if (error) {
+      Alert.alert('Login Error', error.message);
+    } else {
+      router.replace('/(tabs)'); // Redirect to dashboard
+    }
   };
 
   const navigateToSignUp = () => {
