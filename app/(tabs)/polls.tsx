@@ -1,7 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { SafeAreaView, ScrollView, View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
 export default function Polls() {
+
+  const [isBlue, setIsBlue] = useState(true);
+
+  const handlePress = () => {
+    setIsBlue(!isBlue); // flip the color each press
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
@@ -12,7 +19,13 @@ export default function Polls() {
           <View style={styles.pollCard}>
             <Text style={styles.pollQuestion}>What should we prioritize for community improvement?</Text>
             <View style={styles.pollOptions}>
-              <TouchableOpacity style={styles.pollOption}>
+              <TouchableOpacity
+                style={[
+                  styles.pollOption,
+                  { backgroundColor: isBlue ? "white" : "lightblue" }
+                ]}
+                onPress={handlePress}
+              >
                 <Text style={styles.optionText}>Better street lighting</Text>
                 <Text style={styles.optionPercentage}>45%</Text>
               </TouchableOpacity>

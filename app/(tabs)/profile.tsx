@@ -23,11 +23,11 @@ export default function Profile() {
 
         <View style={styles.statsContainer}>
           <View style={styles.statItem}>
-            <Text style={styles.statNumber}>12</Text>
+            <Text style={styles.statNumber}>1</Text>
             <Text style={styles.statLabel}>Issues Reported</Text>
           </View>
           <View style={styles.statItem}>
-            <Text style={styles.statNumber}>8</Text>
+            <Text style={styles.statNumber}>0</Text>
             <Text style={styles.statLabel}>Polls Voted</Text>
           </View>
         </View>

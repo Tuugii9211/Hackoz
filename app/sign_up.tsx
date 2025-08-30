@@ -4,11 +4,19 @@ import { Alert, StyleSheet, Text, TextInput, SafeAreaView, TouchableOpacity } fr
 import { useRouter } from 'expo-router';
 
 export default function SignUpScreen() {
+  const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
   const router = useRouter();
 
   const signUp = async () => {
+    if (!fullName.trim() || !email.trim() || !username.trim() || !password.trim()) {
+      Alert.alert('Error', 'Please fill in all required fields');
+      return;
+    }
+
     const { error } = await supabase.auth.signUp({ email, password });
     if (error) {
       Alert.alert('Sign Up Error', error.message);
@@ -17,8 +25,7 @@ export default function SignUpScreen() {
         {
           text: 'OK',
           onPress: () => {
-            // Redirect to home page after successful sign up
-            router.replace('/(tabs)');
+            router.replace('/login');
           }
         }
       ]);
@@ -32,23 +39,51 @@ export default function SignUpScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.title}>Create Account</Text>
+      
       <TextInput
-        placeholder="Email"
+        placeholder="Full Name *"
+        value={fullName}
+        onChangeText={setFullName}
+        style={styles.input}
+      />
+      
+      <TextInput
+        placeholder="Username *"
+        autoCapitalize="none"
+        value={username}
+        onChangeText={setUsername}
+        style={styles.input}
+      />
+      
+      <TextInput
+        placeholder="Email *"
         autoCapitalize="none"
         value={email}
         onChangeText={setEmail}
         style={styles.input}
+        keyboardType="email-address"
       />
+      
       <TextInput
-        placeholder="Password"
+        placeholder="Password *"
         secureTextEntry
         value={password}
         onChangeText={setPassword}
         style={styles.input}
       />
+      
+      <TextInput
+        placeholder="Phone Number (Optional)"
+        value={phoneNumber}
+        onChangeText={setPhoneNumber}
+        style={styles.input}
+        keyboardType="phone-pad"
+      />
+      
       <TouchableOpacity style={styles.signUpBtn} onPress={signUp}>
         <Text style={styles.btnText}>Sign Up</Text>
       </TouchableOpacity>
+      
       <TouchableOpacity style={styles.signInLink} onPress={navigateToSignIn}>
         <Text style={styles.signInText}>Already have an account? Log In</Text>
       </TouchableOpacity>
