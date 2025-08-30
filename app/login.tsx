@@ -38,10 +38,10 @@ export default function LoginScreen() {
         style={styles.input}
       />
       <TouchableOpacity style={styles.signInBtn} onPress={signIn}>
-        <Text style={styles.btnText}>Sign In</Text>
+        <Text style={styles.btnText}>Login</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.signUpLink} onPress={navigateToSignUp}>
-        <Text style={styles.signUpText}>Don't have an account? Sign up</Text>
+        <Text style={[styles.signUpText, {color: 'green'}]}>Don't have an account? Sign up</Text>
       </TouchableOpacity>
     </SafeAreaView>
   );

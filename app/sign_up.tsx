@@ -25,6 +25,10 @@ export default function SignUpScreen() {
     }
   };
 
+  const navigateToSignIn = () => {
+    router.push('/login');
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.title}>Create Account</Text>
@@ -44,6 +48,9 @@ export default function SignUpScreen() {
       />
       <TouchableOpacity style={styles.signUpBtn} onPress={signUp}>
         <Text style={styles.btnText}>Sign Up</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.signInLink} onPress={navigateToSignIn}>
+        <Text style={styles.signInText}>Already have an account? Log In</Text>
       </TouchableOpacity>
     </SafeAreaView>
   );
@@ -90,5 +97,15 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     fontSize: 16,
     color: 'white',
+  },
+  signInLink: {
+    alignSelf: 'center',
+    marginTop: 20,
+    padding: 8,
+  },
+  signInText: {
+    color: '#007bff',
+    textDecorationLine: 'underline',
+    fontSize: 14,
   },
 });

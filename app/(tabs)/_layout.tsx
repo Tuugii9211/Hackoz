@@ -37,13 +37,7 @@ export default function TabLayout() {
         name="updates"
         options={{
           title: 'Updates',
-          tabBarIcon: ({ color }) => (
-            <Image
-              source={require("../../assets/images/bell-icon.png")}
-              style={{ width: 28, height: 28, tintColor: color }}
-              resizeMode="contain"
-            />
-          ),
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="bell.fill" color={color} />
         }}
       />
       <Tabs.Screen
@@ -68,13 +62,13 @@ export default function TabLayout() {
       <Tabs.Screen
         name="photos"
         options={{
-          href: null, // Hide from tab bar
+          href: null, 
         }}
       />
       <Tabs.Screen
         name="sign"
         options={{
-          href: null, // Hide from tab bar
+          href: null, 
         }}
       />
       <Tabs.Screen
