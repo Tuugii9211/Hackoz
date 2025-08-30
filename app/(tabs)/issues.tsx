@@ -1,5 +1,6 @@
+import { router } from 'expo-router';
 import React, { useState } from 'react';
-import { SafeAreaView, ScrollView, View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import { SafeAreaView, ScrollView, View, Text, StyleSheet, TextInput, TouchableOpacity, Alert } from 'react-native';
 
 export default function Issues() {
   const [issueTitle, setIssueTitle] = useState('');
@@ -21,6 +22,7 @@ export default function Issues() {
             onChangeText={setIssueTitle}
             placeholderTextColor="#888"
           />
+          
         </View>
 
         <View style={styles.section}>
@@ -37,10 +39,22 @@ export default function Issues() {
             textAlignVertical="top"
           />
         </View>
-
-        <TouchableOpacity style={styles.nextButton}>
-          <Text style={styles.nextButtonText}>Next: Add Photos</Text>
-        </TouchableOpacity>
+        <TouchableOpacity
+            style={styles.nextButton}
+            onPress={() => {
+              if (!issueTitle.trim()) {
+                Alert.alert("Required", "Please enter a title for the issue.");
+                return;
+              }
+              if (!description.trim()) {
+                Alert.alert("Required", "Please enter a description for the issue.");
+                return;
+              }
+              router.push('/(tabs)/photos');
+            }}
+          >
+            <Text style={styles.nextButtonText}>Next: Add Photos</Text>
+          </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>
   );

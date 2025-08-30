@@ -1,5 +1,10 @@
+import { router } from 'expo-router';
 import React from 'react';
 import { SafeAreaView, ScrollView, View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
+
+const signOut = () => {
+  router.push('../login');
+};
 
 export default function Profile() {
   return (
@@ -8,11 +13,11 @@ export default function Profile() {
         <View style={styles.header}>
           <View style={styles.avatarContainer}>
             <View style={styles.avatar}>
-              <Text style={styles.avatarText}>JD</Text>
+              <Text style={styles.avatarText}>TB</Text>
             </View>
           </View>
-          <Text style={styles.name}>John Doe</Text>
-          <Text style={styles.email}>john.doe@email.com</Text>
+          <Text style={styles.name}>Tengis Buyanbaatar</Text>
+          <Text style={styles.email}>tengisbuyanbaatar10@gmail.com</Text>
           <Text style={styles.location}>Sydney, NSW</Text>
         </View>
 
@@ -24,10 +29,6 @@ export default function Profile() {
           <View style={styles.statItem}>
             <Text style={styles.statNumber}>8</Text>
             <Text style={styles.statLabel}>Polls Voted</Text>
-          </View>
-          <View style={styles.statItem}>
-            <Text style={styles.statNumber}>15</Text>
-            <Text style={styles.statLabel}>Days Active</Text>
           </View>
         </View>
 
@@ -50,20 +51,12 @@ export default function Profile() {
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Support</Text>
           <TouchableOpacity style={styles.menuItem}>
-            <Text style={styles.menuText}>Help Center</Text>
-            <Text style={styles.menuArrow}>›</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.menuItem}>
             <Text style={styles.menuText}>Contact Support</Text>
-            <Text style={styles.menuArrow}>›</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.menuItem}>
-            <Text style={styles.menuText}>About App</Text>
             <Text style={styles.menuArrow}>›</Text>
           </TouchableOpacity>
         </View>
 
-        <TouchableOpacity style={styles.logoutButton}>
+        <TouchableOpacity style={styles.logoutButton} onPress={signOut}>
           <Text style={styles.logoutButtonText}>Sign Out</Text>
         </TouchableOpacity>
       </ScrollView>

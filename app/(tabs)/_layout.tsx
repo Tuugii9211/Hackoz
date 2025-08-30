@@ -1,6 +1,6 @@
 import { Tabs } from 'expo-router';
 import React from 'react';
-import { Platform, Image } from 'react-native';
+import { Platform, Image, View, Text } from 'react-native';
 
 import { HapticTab } from '@/components/HapticTab';
 import { IconSymbol } from '@/components/ui/IconSymbol';
@@ -50,7 +50,31 @@ export default function TabLayout() {
         name="issues"
         options={{
           title: '',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="plus" color={color} />,
+          tabBarIcon: ({ color }) => (
+            <View style={{
+              width: 50,
+              height: 50,
+              borderRadius: 25,
+              backgroundColor: '#007AFF',
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginBottom: 5,
+            }}>
+              <Text style={{ color: 'white', fontSize: 24, fontWeight: 'bold' }}>+</Text>
+            </View>
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="photos"
+        options={{
+          href: null, // Hide from tab bar
+        }}
+      />
+      <Tabs.Screen
+        name="sign"
+        options={{
+          href: null, // Hide from tab bar
         }}
       />
       <Tabs.Screen

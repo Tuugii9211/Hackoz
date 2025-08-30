@@ -38,9 +38,6 @@ export default function Polls() {
           </View>
         </View>
 
-        <TouchableOpacity style={styles.createButton}>
-          <Text style={styles.createButtonText}>Create New Poll</Text>
-        </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>
   );
@@ -141,10 +138,5 @@ const styles = StyleSheet.create({
     padding: 18,
     alignItems: 'center',
     marginTop: 16,
-  },
-  createButtonText: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: '600',
   },
 });
