@@ -11,26 +11,106 @@ export default function SignUpScreen() {
   const [phoneNumber, setPhoneNumber] = useState('');
   const router = useRouter();
 
-  const signUp = async () => {
-    if (!fullName.trim() || !email.trim() || !username.trim() || !password.trim()) {
-      Alert.alert('Error', 'Please fill in all required fields');
-      return;
-    }
+    const signUp = async () => {
+    try {
+      if (!fullName.trim() || !email.trim() || !username.trim() || !password.trim()) {
+        Alert.alert('Error', 'Please fill in all required fields');
+        return;
+      }
 
-    const { error } = await supabase.auth.signUp({ email, password });
-    if (error) {
-      Alert.alert('Sign Up Error', error.message);
-    } else {
-      Alert.alert('Success', 'Account created successfully!', [
-        {
-          text: 'OK',
-          onPress: () => {
-            router.replace('/login');
-          }
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            full_name: fullName.trim(),
+            username: username.trim(),
+            phone_number: phoneNumber.trim() || null,
+          },
+        },
+      });
+
+      if (error) {
+        Alert.alert('Sign Up Error', error.message);
+        return;
+      }
+
+      // If the user already exists, Supabase may return a user with no identities
+      if (data?.user && Array.isArray(data.user.identities) && data.user.identities.length === 0) {
+        Alert.alert('Email already registered', 'This email is already in use. Please sign in instead.');
+        return;
+      }
+
+      // Try to mirror into profiles, but don't block success if it fails
+      try {
+        const { data: userResp } = await supabase.auth.getUser();
+        const user = userResp?.user;
+        if (user) {
+          await supabase
+            .from('profiles')
+            .upsert({
+              id: user.id,
+              full_name: fullName.trim(),
+              username: username.trim(),
+              email: user.email ?? email.trim(),
+              phone_number: phoneNumber.trim() || null,
+            });
         }
-      ]);
+      } catch (_) {
+      }
+
+      Alert.alert(
+        'Check your email',
+        'We sent you a confirmation link. After confirming, come back and sign in.',
+        [
+          {
+            text: 'OK',
+            onPress: () => router.replace('/login'),
+          },
+        ]
+      );
+    } catch (e: any) {
+      const msg = e?.message ?? 'Sign up failed. Please try again.';
+      Alert.alert('Error', msg);
     }
   };
+
+  // // Prevent already logged-in users from signing up again
+  // React.useEffect(() => {
+  //   const checkLoggedIn = async () => {
+  //     const { data: { user } } = await supabase.auth.getUser();
+  //     if (user) {
+  //       Alert.alert('Already logged in', 'You are already logged in. Please log out before creating a new account.', [
+  //         {
+  //           text: 'OK',
+  //           onPress: () => router.replace('/(tabs)')
+  //         }
+  //       ]);
+  //     }
+  //   };
+  //   checkLoggedIn();
+  // }, []);
+
+  // const signUp = async () => {
+  //   if (!fullName.trim() || !email.trim() || !username.trim() || !password.trim()) {
+  //     Alert.alert('Error', 'Please fill in all required fields');
+  //     return;
+  //   }
+
+  //   const { error } = await supabase.auth.signUp({ email, password });
+  //   if (error) {
+  //     Alert.alert('Sign Up Error', error.message);
+  //   } else {
+  //     Alert.alert('Success', 'Account created successfully!', [
+  //       {
+  //         text: 'OK',
+  //         onPress: () => {
+  //           router.replace('/login');
+  //         }
+  //       }
+  //     ]);
+  //   }
+  // };
 
   const navigateToSignIn = () => {
     router.push('/login');

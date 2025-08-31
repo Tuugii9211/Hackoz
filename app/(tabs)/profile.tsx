@@ -68,14 +68,6 @@ export default function Profile() {
             <Text style={styles.menuText}>Edit Profile</Text>
             <Text style={styles.menuArrow}>›</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.menuItem}>
-            <Text style={styles.menuText}>Notification Preferences</Text>
-            <Text style={styles.menuArrow}>›</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.menuItem}>
-            <Text style={styles.menuText}>Privacy Settings</Text>
-            <Text style={styles.menuArrow}>›</Text>
-          </TouchableOpacity>
         </View>
 
         <View style={styles.section}>

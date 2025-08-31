@@ -2,55 +2,57 @@ import React, { useState } from 'react';
 import { SafeAreaView, ScrollView, View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
 export default function Polls() {
+  // Example live polls (replace with real data fetch if available)
+  const [polls, setPolls] = useState([
+    {
+      id: 1,
+      question: 'Should we install more park benches?',
+      likes: 12,
+      dislikes: 3,
+    },
+    {
+      id: 2,
+      question: 'Do you support the new traffic light schedule?',
+      likes: 8,
+      dislikes: 5,
+    },
+    {
+      id: 3,
+      question: 'Should we organize a monthly community clean-up?',
+      likes: 15,
+      dislikes: 2,
+    },
+  ]);
 
-  const [isBlue, setIsBlue] = useState(true);
-
-  const handlePress = () => {
-    setIsBlue(!isBlue); // flip the color each press
+  const handleLike = (id: number) => {
+    setPolls(polls => polls.map(p => p.id === id ? { ...p, likes: p.likes + 1 } : p));
+  };
+  const handleDislike = (id: number) => {
+    setPolls(polls => polls.map(p => p.id === id ? { ...p, dislikes: p.dislikes + 1 } : p));
   };
 
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <Text style={styles.title}>Polls</Text>
-        
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Active Polls</Text>
-          <View style={styles.pollCard}>
-            <Text style={styles.pollQuestion}>What should we prioritize for community improvement?</Text>
-            <View style={styles.pollOptions}>
-              <TouchableOpacity
-                style={[
-                  styles.pollOption,
-                  { backgroundColor: isBlue ? "white" : "lightblue" }
-                ]}
-                onPress={handlePress}
-              >
-                <Text style={styles.optionText}>Better street lighting</Text>
-                <Text style={styles.optionPercentage}>45%</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.pollOption}>
-                <Text style={styles.optionText}>More green spaces</Text>
-                <Text style={styles.optionPercentage}>32%</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.pollOption}>
-                <Text style={styles.optionText}>Improved public transport</Text>
-                <Text style={styles.optionPercentage}>23%</Text>
-              </TouchableOpacity>
+          <Text style={styles.sectionTitle}>Live Polls</Text>
+          {polls.map(poll => (
+            <View style={styles.pollCard} key={poll.id}>
+              <Text style={styles.pollQuestion}>{poll.question}</Text>
+              <View style={{ flexDirection: 'row', gap: 16, marginVertical: 8 }}>
+                <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', marginRight: 16 }} onPress={() => handleLike(poll.id)}>
+                  <Text style={{ fontSize: 18, marginRight: 4 }}>↑</Text>
+                  <Text style={{ fontWeight: 'bold' }}>{poll.likes}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }} onPress={() => handleDislike(poll.id)}>
+                  <Text style={{ fontSize: 18, marginRight: 4 }}>↓</Text>
+                  <Text style={{ fontWeight: 'bold' }}>{poll.dislikes}</Text>
+                </TouchableOpacity>
+              </View>
             </View>
-            <Text style={styles.pollStatus}>Voting ends in 3 days</Text>
-          </View>
+          ))}
         </View>
-
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Recent Results</Text>
-          <View style={styles.resultCard}>
-            <Text style={styles.resultTitle}>Community Safety Survey</Text>
-            <Text style={styles.resultSummary}>78% of residents feel safe in the neighborhood</Text>
-            <Text style={styles.resultDate}>Completed 2 weeks ago</Text>
-          </View>
-        </View>
-
       </ScrollView>
     </SafeAreaView>
   );
