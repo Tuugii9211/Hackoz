@@ -1,23 +1,53 @@
 import { router } from 'expo-router';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { SafeAreaView, ScrollView, View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { supabase } from '@/libs/supabase';
 
 const signOut = () => {
   router.push('../login');
 };
 
 export default function Profile() {
+  const [initials, setInitials] = useState('');
+  const [fullName, setFullName] = useState('');
+  const [email, setEmail] = useState('');
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      const { data: { user }, error } = await supabase.auth.getUser();
+      if (user && !error) {
+        const { data: profile, error: profileError } = await supabase
+          .from('users')
+          .select('full_name, email')
+          .eq('auth_user_id', user.id)
+          .single();
+        const name = profile?.full_name || user.user_metadata?.full_name || '';
+        setFullName(name);
+        setEmail(profile?.email || user.email || '');
+        if (name) {
+          const initials = name
+            .split(' ')
+            .filter(Boolean)
+            .map((n: string) => n[0].toUpperCase())
+            .join('');
+          setInitials(initials);
+        }
+      }
+    };
+    fetchProfile();
+  }, []);
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <View style={styles.header}>
           <View style={styles.avatarContainer}>
             <View style={styles.avatar}>
-              <Text style={styles.avatarText}>TB</Text>
+              <Text style={styles.avatarText}>{initials}</Text>
             </View>
           </View>
-          <Text style={styles.name}>Tengis Buyanbaatar</Text>
-          <Text style={styles.email}>tengisbuyanbaatar10@gmail.com</Text>
+          <Text style={styles.name}>{fullName}</Text>
+          <Text style={styles.email}>{email}</Text>
           <Text style={styles.location}>Sydney, NSW</Text>
         </View>
 

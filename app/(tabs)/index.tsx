@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { SafeAreaView, ScrollView, View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { supabase } from '@/libs/supabase';
 import { blue } from 'react-native-reanimated/lib/typescript/Colors';
 
 // Placeholder QuickActions component
@@ -38,23 +39,43 @@ function LatestUpdates() {
 }
 
 export default function Dashboard() {
+  const [firstName, setFirstName] = useState('');
+
+  useEffect(() => {
+    const fetchFirstName = async () => {
+      const { data: { user }, error } = await supabase.auth.getUser();
+      if (user && !error) {
+        // Fetch full name from profile table
+        const { data: profile, error: profileError } = await supabase
+          .from('users')
+          .select('full_name')
+          .eq('auth_user_id', user.id)
+          .single();
+        let fullName = profile?.full_name || user.user_metadata?.full_name || '';
+        if (fullName) {
+          const firstName = fullName.split(' ')[0];
+          setFirstName(firstName);
+        }
+      }
+    };
+    fetchFirstName();
+  }, []);
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
-
-      <View style={{ 
-        flexDirection: "row", 
-        justifyContent: "space-between", 
-        alignItems: "stretch",
-        paddingHorizontal: 16
-      }}>
-        <Text style={styles.title}>Dashboard</Text>
-        
-        <Text style={{alignItems: "flex-end"}}>
-          Welcome,{"\n"}
-          <Text style={{ fontWeight: "bold" }}>Tengis</Text>
-        </Text>
-      </View>
+        <View style={{ 
+          flexDirection: "row", 
+          justifyContent: "space-between", 
+          alignItems: "stretch",
+          paddingHorizontal: 16
+        }}>
+          <Text style={styles.title}>Dashboard</Text>
+          <Text style={{alignItems: "flex-end"}}>
+            Welcome,{"\n"}
+            <Text style={{ fontWeight: "bold" }}>{firstName}</Text>
+          </Text>
+        </View>
         <QuickActions />
         <RecentIssues />
         <LatestUpdates />
