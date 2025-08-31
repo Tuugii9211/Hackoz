@@ -24,11 +24,37 @@ export default function Polls() {
     },
   ]);
 
+  // Track user's vote per poll: 'like', 'dislike', or null
+  const [userVotes, setUserVotes] = useState<{ [pollId: number]: 'like' | 'dislike' | null }>({});
+
   const handleLike = (id: number) => {
-    setPolls(polls => polls.map(p => p.id === id ? { ...p, likes: p.likes + 1 } : p));
+    setPolls(polls => polls.map(p => {
+      if (p.id !== id) return p;
+      // If already liked, do nothing
+      if (userVotes[id] === 'like') return p;
+      // If previously disliked, remove one dislike and add one like
+      if (userVotes[id] === 'dislike') {
+        return { ...p, likes: p.likes + 1, dislikes: p.dislikes - 1 };
+      }
+      // If not voted yet, add one like
+      return { ...p, likes: p.likes + 1 };
+    }));
+    setUserVotes(votes => ({ ...votes, [id]: 'like' }));
   };
+
   const handleDislike = (id: number) => {
-    setPolls(polls => polls.map(p => p.id === id ? { ...p, dislikes: p.dislikes + 1 } : p));
+    setPolls(polls => polls.map(p => {
+      if (p.id !== id) return p;
+      // If already disliked, do nothing
+      if (userVotes[id] === 'dislike') return p;
+      // If previously liked, remove one like and add one dislike
+      if (userVotes[id] === 'like') {
+        return { ...p, likes: p.likes - 1, dislikes: p.dislikes + 1 };
+      }
+      // If not voted yet, add one dislike
+      return { ...p, dislikes: p.dislikes + 1 };
+    }));
+    setUserVotes(votes => ({ ...votes, [id]: 'dislike' }));
   };
 
   return (
@@ -41,11 +67,19 @@ export default function Polls() {
             <View style={styles.pollCard} key={poll.id}>
               <Text style={styles.pollQuestion}>{poll.question}</Text>
               <View style={{ flexDirection: 'row', gap: 16, marginVertical: 8 }}>
-                <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', marginRight: 16 }} onPress={() => handleLike(poll.id)}>
+                <TouchableOpacity
+                  style={{ flexDirection: 'row', alignItems: 'center', marginRight: 16, opacity: userVotes[poll.id] === 'like' ? 0.5 : 1 }}
+                  onPress={() => handleLike(poll.id)}
+                  disabled={userVotes[poll.id] === 'like'}
+                >
                   <Text style={{ fontSize: 18, marginRight: 4 }}>↑</Text>
                   <Text style={{ fontWeight: 'bold' }}>{poll.likes}</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }} onPress={() => handleDislike(poll.id)}>
+                <TouchableOpacity
+                  style={{ flexDirection: 'row', alignItems: 'center', opacity: userVotes[poll.id] === 'dislike' ? 0.5 : 1 }}
+                  onPress={() => handleDislike(poll.id)}
+                  disabled={userVotes[poll.id] === 'dislike'}
+                >
                   <Text style={{ fontSize: 18, marginRight: 4 }}>↓</Text>
                   <Text style={{ fontWeight: 'bold' }}>{poll.dislikes}</Text>
                 </TouchableOpacity>
